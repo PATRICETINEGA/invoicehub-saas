@@ -1,6 +1,6 @@
 # InvoiceHub SaaS
 
-Complete full-stack invoice and client management platform.
+Full-stack invoice and client management application.
 
 ## Features
 
@@ -39,10 +39,6 @@ Open http://localhost:3000
 | Admin | admin@invoicehub.app | admin123  |
 | User  | demo@invoicehub.app  | demo123   |
 
-## Commercial Use
-
-Complete working product with real domain logic. Suitable for white-label customization, internal use, or direct source code sale.
-
 ## License
 
-MIT License – free to use, modify, and sell.
+MIT License
