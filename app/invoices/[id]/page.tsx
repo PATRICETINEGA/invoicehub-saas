@@ -2,6 +2,7 @@ import { redirect } from 'next/navigation'
 import { getSession } from '@/lib/session'
 import { prisma } from '@/lib/prisma'
 import Link from 'next/link'
+import InvoiceStatusSelect from '@/components/InvoiceStatusSelect'
 
 export default async function InvoicePage({ params }: { params: { id: string } }) {
   const session = await getSession()
@@ -27,12 +28,12 @@ export default async function InvoicePage({ params }: { params: { id: string } }
       </nav>
       <main className="max-w-3xl mx-auto p-6">
         <div className="bg-white rounded-lg shadow p-6">
-          <div className="flex justify-between mb-6">
+          <div className="flex justify-between mb-6 items-start">
             <div>
               <h1 className="text-2xl font-bold">{invoice.number}</h1>
               <p className="text-gray-600">{invoice.client.name}</p>
             </div>
-            <span className="text-sm px-3 py-1 bg-gray-100 rounded">{invoice.status}</span>
+            <InvoiceStatusSelect invoiceId={invoice.id} current={invoice.status} />
           </div>
           <div className="border-t pt-4">
             {invoice.items.map((item) => (
