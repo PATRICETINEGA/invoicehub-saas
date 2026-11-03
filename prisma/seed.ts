@@ -29,30 +29,43 @@ async function main() {
     },
   })
 
-  const client = await prisma.client.create({
-    data: {
-      name: 'Acme Corp',
-      email: 'billing@acme.com',
-      company: 'Acme Corporation',
-      ownerId: demo.id,
-    },
+  const existingClient = await prisma.client.findFirst({
+    where: { name: 'Acme Corp', ownerId: demo.id },
   })
 
-  await prisma.invoice.create({
-    data: {
-      number: 'INV-1001',
-      status: 'sent',
-      dueDate: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000),
-      clientId: client.id,
-      ownerId: demo.id,
-      items: {
-        create: [
-          { description: 'Website redesign', quantity: 1, unitPrice: 2500 },
-          { description: 'Logo design', quantity: 1, unitPrice: 800 },
-        ],
+  let client = existingClient
+  if (!client) {
+    client = await prisma.client.create({
+      data: {
+        name: 'Acme Corp',
+        email: 'billing@acme.com',
+        company: 'Acme Corporation',
+        ownerId: demo.id,
       },
-    },
+    })
+  }
+
+  const existingInvoice = await prisma.invoice.findFirst({
+    where: { number: 'INV-1001', ownerId: demo.id },
   })
+
+  if (!existingInvoice && client) {
+    await prisma.invoice.create({
+      data: {
+        number: 'INV-1001',
+        status: 'sent',
+        dueDate: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000),
+        clientId: client.id,
+        ownerId: demo.id,
+        items: {
+          create: [
+            { description: 'Website redesign', quantity: 1, unitPrice: 2500 },
+            { description: 'Logo design', quantity: 1, unitPrice: 800 },
+          ],
+        },
+      },
+    })
+  }
 
   console.log('Seed completed')
 }
